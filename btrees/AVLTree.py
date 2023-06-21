@@ -1,4 +1,7 @@
-class Tree:
+from btrees.AbstractTree import AbstractTree, left_height, right_height, update
+
+
+class Tree(AbstractTree):
     def __init__(self, key, value):
         self.key = key
         self.value = value
@@ -9,21 +12,6 @@ class Tree:
 
     def __str__(self):
         return f"({self.key}, {self.value})"
-
-
-#def list(t: Tree):
-#    if t is None:
-#        return []
-#   return [(t, t.left_child, t.right_child)] + list(t.left_child) + list(t.right_child)
-
-
-def find(t: Tree, key) -> Tree | None:
-    if t is None:
-        return None
-    if t.key == key:
-        return t
-    return find(t.right_child, key) if t.key < key \
-        else find(t.left_child, key)
 
 
 def insert(t: Tree, key, value) -> Tree:
@@ -37,14 +25,6 @@ def insert(t: Tree, key, value) -> Tree:
         t.right_child = insert(t.right_child, key, value)
     update(t)
     return balance(t)
-
-
-def find_min(t: Tree) -> Tree | None:
-    if t is None:
-        return None
-    if t.left_child is None:
-        return t
-    return find_min(t.left_child)
 
 
 def remove_min(t: Tree) -> Tree | None:
@@ -71,68 +51,6 @@ def remove(t: Tree, key) -> Tree | None:
     else:
         t.right_child = remove(t.right_child, key)
     return balance(t)
-
-
-def lower_bound(t: Tree, key):
-    if t is None:
-        return None
-    if t.key == key:
-        return t
-
-    if key < t.key:
-        res = lower_bound(t.left_child, key)
-        if res is None or t.key < res.key:
-            return t
-        return res
-
-    return lower_bound(t.right_child, key)
-
-
-def kth(t: Tree, k):
-    if t is None:
-        return None
-    if k == left_size(t) + 1:
-        return t
-    if k <= left_size(t):
-        return kth(t.left_child, k)
-    return kth(t.right_child, k - left_size(t) - 1)
-
-
-def count_less(t: Tree, key):
-    return size(t) - size(lower_bound(t, key))
-
-
-def size(t: Tree):
-    return 0 if t is None else t.size
-
-
-def left_size(t: Tree):
-    if t.left_child is None:
-        return 0
-    return t.left_child.size
-
-
-def right_size(t: Tree):
-    if t.right_child is None:
-        return 0
-    return t.right_child.size
-
-
-def update(t: Tree):
-    t.height = 1 + max(left_height(t), right_height(t))
-    t.size = 1 + left_size(t) + right_size(t)
-
-
-def left_height(t: Tree):
-    if t.left_child is None:
-        return 0
-    return t.left_child.height
-
-
-def right_height(t: Tree):
-    if t.right_child is None:
-        return 0
-    return t.right_child.height
 
 
 def balance(t: Tree):
